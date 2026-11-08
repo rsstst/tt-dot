@@ -1,0 +1,10 @@
+<div>
+    <h1>Edit dosen</h1>
+    <form method='post' action='/dosen/{{dosen.id}}'>
+        <label for='nama'>Nama dosen</label>
+        <input type='text' name='nama' placeholder='Nama dosen' value='{{dosen.nama}}' required />
+        <label for='mata_kuliah'>Mata kuliah</label>
+        <input type='text' name='mata_kuliah' placeholder='Mata kuliah' value='{{dosen.mata_kuliah}}' required />
+        <button type='submit'>Simpan</button>
+        </form>
+    </div>

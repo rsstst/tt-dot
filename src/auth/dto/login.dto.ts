@@ -2,10 +2,10 @@ import { IsNotEmpty, IsString } from 'class-validator';
 
 export class LoginDto {
     @IsNotEmpty({ message: 'Username harap diisi' })
-    @IsString()
+    @IsString({ message: 'Username harus berupa string' })
     username: string;
 
     @IsNotEmpty({ message: 'Password harap diisi' })
-    @IsString()
+    @IsString({ message: 'Password harus berupa string' })
     password: string;
 }

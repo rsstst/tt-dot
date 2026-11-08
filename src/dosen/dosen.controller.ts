@@ -1,12 +1,14 @@
-import { Body, Controller, Get, Post, Query, Res, Param, ParseIntPipe } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, Res, Param, ParseIntPipe, UseGuards } from '@nestjs/common';
 import type { Response } from 'express';
 import { DosenService } from './dosen.service.js';
 import { DosenDto } from './dto/dosen.dto.js';
+import { AuthGuard } from '../common/guards/auth.guard.js';
 
 @Controller('dosen')
 export class DosenController {
-  constructor(private readonly dosenService: DosenService) {}
+  constructor(private dosenService: DosenService) {}
 
+  // ambil semua data dosen
   @Get()
   async findAll(
     @Query('search') search: string,
@@ -21,7 +23,26 @@ export class DosenController {
     return res.render('dosen/index', { dosen, search });
   }
 
-  @Get('create')
+  // ambil data dosen dari id, tampilkan ke form edit
+  @Get(':id/edit')
+  @UseGuards(AuthGuard)
+  async editForm(
+    @Param('id', ParseIntPipe) id: number,
+    @Query('format') format: string,
+    @Res() res: Response,
+  ){
+    const dosen = await this.dosenService.findOne(id);
+
+    if (format === 'json') {
+      return res.json(dosen);
+    }
+
+    return res.render('dosen/edit', { dosen });
+  }
+
+  // tambah data dosen
+  @Post()
+  @UseGuards(AuthGuard)
   async create(
     @Body() dto: DosenDto,
     @Query('format') format: string,
@@ -35,7 +56,9 @@ export class DosenController {
     return res.redirect('/dosen');
   }
 
-  @Post('delete/:id')
+  // hapus data dosen
+  @Post(':id/delete')
+  @UseGuards(AuthGuard)
   async delete(
     @Param('id', ParseIntPipe) id: number,
     @Query('format') format: string,
@@ -53,6 +76,7 @@ export class DosenController {
       }
 
       return res.status(400).render('dosen/index', {
+        dosen: await this.dosenService.findAll(),
         error: error.message,
       });
     }
@@ -62,4 +86,21 @@ export class DosenController {
     }
     return res.redirect('/dosen');
   } 
+
+  // update data dosen
+  @Post(':id')
+  @UseGuards(AuthGuard)
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: DosenDto,
+    @Query('format') format: string,
+    @Res() res: Response,
+  ){
+    await this.dosenService.update(id, dto);
+
+    if (format === 'json') {
+      return res.json({ message: 'Dosen berhasil diupdate' });
+    }
+    return res.redirect('/dosen');
+  }
 }

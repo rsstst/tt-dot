@@ -1,0 +1,18 @@
+<div>
+    <h1>Edit Mahasiswa</h1>
+    <form method='post' action='/mahasiswa/{{mahasiswa.id}}'>
+        <label for='nama'>Nama Mahasiswa</label>
+        <input type='text' name='nama' placeholder='Nama Mahasiswa' value='{{mahasiswa.nama}}' required />
+        <label for='nim'>NIM</label>
+        <input type='text' name='nim' placeholder='NIM' value='{{mahasiswa.nim}}' required />
+        <label for='dosenId'>Dosen</label>
+        <select name='dosenId' required>
+            {{#each dosen}}
+                <option value='{{id}}' {{#if selected}}selected{{/if}}>
+                    {{nama}}
+                </option>
+            {{/each}}
+        </select>
+        <button type='submit'>Simpan</button>
+        </form>
+    </div>

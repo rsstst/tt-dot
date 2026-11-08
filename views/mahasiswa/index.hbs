@@ -1,16 +1,54 @@
 <div>
-    <h1>List mahasiswa</h1>
-    {{#if error}}
-        <p id="dosen-error" role="alert" data-message="{{error}}">{{error}}</p>
-        <script>
-            window.alert(document.getElementById('dosen-error').dataset.message);
-            window.location.assign('/dosen');
-        </script>
-    {{/if}}
-    {{#each mahasiswa}}
-        <p>{{nama}} - {{nim}} = {{dosen.nama}}</p>
-        <form method="post" action="/dosen/delete/{{id}}">
-            <button type="submit">Hapus</button>
-        </form>
-    {{/each}}
+  <h1>List mahasiswa</h1>
+
+  {{!-- form cari --}}
+  <form method="GET" action="/mahasiswa">
+    <input type="text" name="search" placeholder="Cari nama mahasiswa..." value="{{search}}" />
+    <button type="submit">Cari</button>
+    <a href="/mahasiswa">Reset</a>
+  </form>
+
+  {{!-- form tambah mahasiswa --}}
+  <form method='post' action='/mahasiswa'>
+    <input type='text' name='nama' placeholder='Nama mahasiswa' required />
+    <input type='text' name='nim' placeholder='NIM mahasiswa' required />
+    <select name='dosenId' required>
+      <option value='' disabled selected>Pilih dosen</option>
+      {{#each dosen}}
+        <option value={{id}}>{{nama}}</option>
+      {{/each}}
+    </select>
+    <button type='submit'>Tambah</button>
+  </form>
+
+  {{!-- error alert --}}
+  {{#if error}}
+    <p id='error' role='alert' data-message='{{error}}'>{{error}}</p>
+    <script>
+      window.alert(document.getElementById('error').dataset.message);
+      window.location.assign('/mahasiswa');
+    </script>
+  {{/if}}
+
+{{!-- tampilan data mahasiswa --}}
+<div class="container">
+  {{#each mahasiswa}}
+    <div class='item-list'>
+      <h2 class='nama-mahasiswa'>{{nama}}</h2>
+      <p class='nim-mahasiswa'>{{nim}}</p>
+      <p class='dosen-mahasiswa'>Dosen: {{dosen.nama}}</p>
+
+        <div class='btn-container'>
+          <form method='post' action='/mahasiswa/{{id}}/delete'>
+            <button class='btn' type='submit'>Hapus</button>
+          </form>
+          <a class='btn' href='/mahasiswa/{{id}}/edit'>Edit</a>
+        </div>
+    </div>
+
+    {{ else }}
+      <p>Belum ada mahasiswa terdaftar</p>
+  {{/each}}
+  </div>
+
 </div>

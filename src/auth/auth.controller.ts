@@ -25,7 +25,7 @@ export class AuthController {
     @Res() res: Response,
   ) {
     if (req.session?.user) {
-      return res.redirect('/dashboard');
+      return res.redirect('/dosen');
     }
 
     if (format === 'json') {
@@ -52,7 +52,7 @@ export class AuthController {
       if (format === 'json') {
         return res.json({ message: 'Login berhasil', user });
       }
-      return res.redirect('/dashboard');
+      return res.redirect('/dosen');
     } catch (error) {
       if (format === 'json') {
         throw error;
@@ -61,7 +61,7 @@ export class AuthController {
     }
   }
 
-  @Post('logout')
+  @Get('logout')
   @UseGuards(AuthGuard)
   logout(
     @Query('format') format: string,

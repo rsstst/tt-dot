@@ -1,16 +1,27 @@
 import { PrismaClient } from '../src/generated/prisma/client.js';
-import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
+import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
+import * as bcrypt from 'bcrypt';
 
 const adapter = new PrismaBetterSqlite3({
-  url: process.env.DATABASE_URL || 'file:./dev.db',
+  url: 'file:./dev.db',
 });
 
-const prisma = new PrismaClient({adapter});
+const prisma = new PrismaClient({ adapter });
 
 async function main() {
+
   await prisma.mahasiswa.deleteMany();
   await prisma.dosen.deleteMany();
   await prisma.user.deleteMany();
+  console.log ("Database bersih")
+
+  // const hashedPassword = await bcrypt.hash('admin1234', 10);
+  await prisma.user.create({
+    data: {
+      username: 'admin',
+      password: 'admin123',
+    },
+  });
 
   const dosen1 = await prisma.dosen.create({
     data: { nama: 'Budi Santoso', mata_kuliah: 'Pemrograman Web' },
