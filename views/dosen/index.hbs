@@ -1,0 +1,16 @@
+<div>
+    <h1>List dosen terdaftar</h1>
+    {{#if error}}
+        <p id="dosen-error" role="alert" data-message="{{error}}">{{error}}</p>
+        <script>
+            window.alert(document.getElementById('dosen-error').dataset.message);
+            window.location.assign('/dosen');
+        </script>
+    {{/if}}
+    {{#each dosen}}
+        <p>{{nama}} - {{mata_kuliah}}</p>
+        <form method="post" action="/dosen/delete/{{id}}">
+            <button type="submit">Hapus</button>
+        </form>
+    {{/each}}
+</div>
