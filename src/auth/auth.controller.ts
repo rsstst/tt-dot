@@ -25,6 +25,11 @@ export class AuthController {
     @Res() res: Response,
   ) {
     if (req.session?.user) {
+
+      if (format === 'json') {
+        return res.json({ message: 'Sudah login', user: req.session.user });
+      }
+
       return res.redirect('/dosen');
     }
 
